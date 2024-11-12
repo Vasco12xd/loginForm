@@ -16,16 +16,45 @@
         <br>
         <input type="checkbox"><label for="" type="checkbox">Recordarme</label>
         <br>
-        <button class="btn btn-success rounded-pill py-2 mt-2" type="submit" id="enviar">Enviar</button>
+        <button class="btn btn-primary rounded-pill py-2 mt-2" type="submit" id="enviar" onclick="window.location.href='register.html'">Iniciar sesión/Registrarme</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        let enviar = document.getElementById("enviar");
-        enviar.addEventListener("click", function(){
-            alert("Bienvenido");
+        let usuario = JSON.parse(localStorage.getItem("usuario"));
+        
+        // Si el usuario está registrado, lo redirigimos al home
+        if (usuario) {
+            // Si el usuario ya está registrado, redirigimos automáticamente a la página home.html
+            alert("Bienvenido, " + usuario.nombre);
             location.href = "home.html";
-        })
+        } else {
+            // Si no existe el objeto usuario, proceder con la lógica del login
+            let enviar = document.getElementById("enviar");
+            enviar.addEventListener("click", function() {
+                // Obtener los valores del formulario
+                let correo = document.getElementById("correo").value;
+                let contrasena = document.getElementById("contrasena").value;
+
+                // Verificar si los campos de correo y contraseña son correctos
+                if (correo && contrasena) {
+                    // Buscar al usuario registrado en el localStorage (por correo y contraseña)
+                    let usuarioRegistrado = JSON.parse(localStorage.getItem("usuario"));
+
+                    // Comprobar que el correo y la contraseña coincidan
+                    if (usuarioRegistrado && usuarioRegistrado.correo === correo && usuarioRegistrado.password === contrasena) {
+                        // Si el login es correcto, redirigimos al home
+                        alert("Bienvenido, " + usuarioRegistrado.nombre);
+                        location.href = "home.html";  // Redirigir a home.html
+                    } else {
+                        // Si no coincide, mostrar un error
+                        alert("Correo o contraseña incorrectos.");
+                    }
+                } else {
+                    alert("Por favor, ingrese ambos campos.");
+                }
+            });
+        }
     </script>
 </body>
 </html>

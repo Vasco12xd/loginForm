@@ -1,0 +1,14 @@
+.container{
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label{
+    height: auto;
+    width: 100%;
+    border: solid 1px black;
+    border-radius: 7px;
+    padding: 5px;
+}

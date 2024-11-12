@@ -11,24 +11,23 @@
 <body >
     <nav class="navbar bg-body-tertiary">
         <div class="container">
-          <a class="navbar-brand"  href="#" >
+          <a class="navbar-brand" id="home" href="/home.html" >
             <i class="material-icons" width="30" height="24">add</i>
             <p>Nuevos</p>
           </a>
-          <a class="navbar-brand" id="categories" href="#">
-            <i class="material-icons" width="30" height="24">store</i>
-            <p>Categoria</p>
+          <a class="navbar-brand" id="cart" href="/cart.html">
+            <i class="material-icons" width="30" height="24">shopping_cart</i>
+            <p>Carrito</p>
           </a>
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" id="pedido" href="/pedido.html">
             <i class="material-icons" width="30" height="24">location_on</i>
             <p>Pedidos</p>
           </a>
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" id="perfil" href="/order.html">
             <i class="material-icons" width="30" height="24">person</i>
             <p>Perfil</p>
           </a>
-          <input type="search" id="text">
-          <button onclick="handlebotonenter(event)" id="buscador" type="submit">buscar</button>
+          
         </div>
       </nav>
       <h1>Productos</h1>
@@ -70,52 +69,6 @@
             imagen: "https://www.mil-colores.com/wp-content/uploads/52TRE3A-269_1-1.jpg"
         }] 
         
-          //buscador de productos
-        
-          
-          let handlebotonenter = (event) => {
-    // Verifica si la tecla presionada es Enter
-            
-          let buscador = document.getElementById("text");
-          let busqueda = buscador.value;
-        // Verifica si hay algo en el input
-        if (busqueda.trim() !== "") {
-            fetch("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + busqueda)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // Muestra la respuesta de la API en la consola
-                    
-                    // Aquí puedes procesar los datos y generar las tarjetas de bebidas
-                    // Por ejemplo, si la respuesta contiene bebidas, puedes iterar sobre ellas:
-                    if (data.drinks) {
-                        data.drinks.forEach(drink => {
-                            // Crea una tarjeta para cada bebida
-                            let card = document.createElement("div");
-                            card.classList.add("card");
-                            card.innerHTML = `
-                                <div class="card-body">
-                                    <h5 class="card-title">${drink.strDrink}</h5>
-                                    <img src="${drink.strDrinkThumb}" class="card-img-top" alt="${drink.strDrink}">
-                                    <p class="card-text">${drink.strInstructions}</p>
-                                </div>
-                            `;
-                            document.body.append(card);  // Añade la tarjeta al DOM
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error("Error en la búsqueda:", error);  // Maneja cualquier error de la API
-                });
-        } else {
-            console.log("Por favor, ingrese un nombre de cóctel.");
-        }
-
-    }
-    
-// Agrega el evento 'keydown' al campo de búsqueda
-document.getElementById("buscador").addEventListener("keydown", handlebotonenter);
-
-
             productos.forEach(producto => {
                 let card = document.createElement("div");
                 card.classList.add("card", "mb-3");
@@ -129,7 +82,7 @@ document.getElementById("buscador").addEventListener("keydown", handlebotonenter
                           <h5 class="card-title">${producto.nombre}</h5>
                           <p class="card-text">${producto.descripcion}</p>
                           <p class="card-text">${producto.precio}</p>
-                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                          <button type="button" class="btn btn-primary" onclick="agregarAlCarrito(${producto.id})">Añadir</button>
                         </div>
                       </div>
                     </div>
@@ -137,8 +90,36 @@ document.getElementById("buscador").addEventListener("keydown", handlebotonenter
                 document.body.append(card);
             });
 
-            document.getElementById("categories").onclick = function () {
-            location.href = "./categories.html";
+            function agregarAlCarrito(productoId) {
+                // Recuperamos el carrito desde el localStorage, si ya existe
+                let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+                
+                // Encontramos el producto que se agregó
+                let producto = productos.find(p => p.id === productoId);
+
+                // Verificamos si el producto ya está en el carrito
+                let productoEnCarrito = carrito.find(p => p.id === productoId);
+
+                if (!productoEnCarrito) {
+                    // Si el producto no está, lo agregamos
+                    carrito.push(producto);
+                    localStorage.setItem("carrito", JSON.stringify(carrito));
+                    alert("Producto agregado al carrito");
+                } else {
+                    alert("Este producto ya está en el carrito");
+                }
+            }
+
+            document.getElementById("cart").onclick = function () {
+            location.href = "cart.html";
+
+            document.getElementById("pedido").onclick = function () {
+                location.href = "order.html";
+            };
+
+            document.getElementById("perfil").onclick = function () {
+                location.href = "myaccount.html";
+            };
         };
         
       </script>
